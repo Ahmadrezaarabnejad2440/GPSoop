@@ -1,0 +1,64 @@
+TinyGPS++-based GPS Library for Arduino
+A lightweight C++ wrapper around the popular TinyGPS++ library that parses NMEA sentences from a serial GPS receiver and exposes common data in human-readable strings.
+🧰 Hardware Required
+
+    Arduino (Uno, Nano, Mega, ESP8266, ESP32, etc.)
+    Serial GPS receiver (NEO-6M, NEO-M8N, ATGM336H, etc.)
+    2 free digital pins for SoftwareSerial (or use native Serial1/Serial2 on boards that have them)
+
+🔧 Wiring
+Table
+Copy
+GPS	Arduino (SoftwareSerial)
+VCC	3.3 – 5 V
+GND	GND
+TX	D7 (RXPin)
+RX	D8 (TXPin) via level-shifter if 5 V → 3.3 V
+📦 Installation
+
+    Arduino IDE → Library Manager
+        Install TinyGPS++ by Mikal Hart
+        Install SoftwareSerial (built-in on AVR; on ESP32 use HardwareSerial instead)
+    Copy the files
+        TinyGPSPlus.h, TinyGPSPlus.cpp → Documents/Arduino/libraries/TinyGPSPlus
+        Drop this GPS.h (or rename it) into your sketch folder.
+
+
+
+
+
+API Reference
+Table
+Copy
+Method	Return	Description
+begin(baud)	void	Starts the software-serial port. Default 9600 bps.
+readData()	bool	true when a fresh TinyGPS++ fix is available.
+generateMapLink()	String	OpenStreetMap URL: https://www.openstreetmap.org/?mlat=...&mlon=...&zoom=15
+height()	String	Altitude in meters with 1 decimal place.
+speed()	String	Ground speed in km/h (integer).
+direction()	String	Course over ground in degrees (integer).
+satellites()	String	Number of satellites in use.
+hdop()	String	Horizontal Dilution of Precision.
+date()	String	“MM/DD/YYYY” or “Not Available Date”.
+time()	String	“HH:MM:SS” UTC or “Not Available Time”.
+⚙️ Advanced Usage
+
+    Change baud rate
+    cpp
+
+    Copy
+
+    serialgps.begin(115200);   // if your module is pre-configured
+
+    HardwareSerial on ESP32
+    Replace SoftwareSerial gpsSerial(RXPin, TXPin); with HardwareSerial &gpsSerial = Serial2; and adjust pins via Serial2.begin(9600, SERIAL_8N1, 16, 17);.
+    Custom zoom level
+    Modify generateMapLink() to append &zoom=18 for closer view.
+
+✅ Troubleshooting
+Table
+Copy
+Symptom	Fix
+“Not Available Time/Date”	Ensure the GPS has a clear sky view and a 3-D fix (≥ 4 satellites).
+Garbage characters	Confirm TX/RX wiring and baud-rate match.
+ESP8266 reboots	Use yield() inside the readData() while-loop or switch to HardwareSerial.
