@@ -24,9 +24,6 @@ RX	D8 (TXPin) via level-shifter if 5 V → 3.3 V
         Drop this GPS.h (or rename it) into your sketch folder.
 
 
-
-
-
 API Reference
 Table
 Copy
